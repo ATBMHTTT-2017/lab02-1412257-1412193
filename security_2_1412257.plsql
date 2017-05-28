@@ -35,3 +35,6 @@ BEGIN
     END IF;   
 END;
 /
+
+grant execute on create_signature to truongduan;
+grant execute on verify to nhanvien;
