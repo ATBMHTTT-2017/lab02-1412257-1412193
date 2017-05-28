@@ -42,32 +42,56 @@
 
 #### Ví dụ từ mã nguồn (thêm trường Hashkey trong bảng nhân viên)
 
+>`hashkey varchar2(128)`
+
 #### Ví dụ từ mã nguồn (kiểm tra Hashkey xem đúng hay sai và tiếp tục)
+
+>`if (l_HASH = p_hash_data) then ... `
 
 ##### Hàm 1 : mã hóa lương hiện tại có trong bảng thành cách dãy số nhằm che dấu với các nhân viên khác . Mã hóa theo các key mà nhân viên cung cấp cho ta mỗi nhân viên trong bảng sẽ có 1 key riêng để quản lý trưởng lương của mình trong bảng nhân viên (sử dụng dbms_crypto.encrypt : để mã hóa lương theo key của mỗi nhân viên) - có 2 thông số (lương hiện tại, key)
 
+#### Ví dụ từ mã nguồn:
+
+>`create or replace function encrypt_data_luong(
+	p_data IN VARCHAR2,
+	v_keysx IN VARCHAR2)
+return RAW DETERMINISTIC`
+
+##### Hàm 2 : hàm giải mã (sử dụng dbms_crypto.decrypt) biến truyền vào (Data, hashkey, key của người dùng muón giải)
 
 #### Ví dụ từ mã nguồn:
 
-##### Hàm 2 : hàm giải mã (sử dụng dbms_crypto.decrypt) biến truyền vào (Data, hashkey, <key của người dùng muón giải>)
+>`create or replace function encrypt_data_luong(
+	p_data IN VARCHAR2,
+	v_keysx IN VARCHAR2)
+return RAW DETERMINISTIC`
+
+##### Hàm 3 : hàm mã hóa key của nhân viên thành 1 chuỗi Hash (sử dụng dbms_crypto.Hash) biến truyền vào (Key của ta)
 
 #### Ví dụ từ mã nguồn:
 
-##### Hàm 3 : hàm mã hóa key của nhân viên thành 1 chuỗi Hash (sử dụng dbms_crypto.Hash) biến truyền vào (<Key của ta>)
-
-#### Ví dụ từ mã nguồn:
+>`create or replace function Hash_data(p_key IN VARCHAR2)
+return RAW DETERMINISTIC`
 
 - Bước tiếp theo : cập nhật các trưởng lương hiện tại bằng hàm mã hóa (hàm 1 : hàm mã hóa)
 
 #### Ví dụ từ mã nguồn:
 
+>`update nhanvien set hashkey = Hash_data('passwordexesx10') where manv = '1412193';`
+
 - Bước tiếp theo : cập nhật trưởng Hashkey cho bảng nhân viên tương ứng với mỗi nhân viên (hàm 3 : hàm băm )
 
 #### Ví dụ từ mã nguồn:
 
+>`update nhanvien set luong = encrypt_data_luong(luong, 'passwordexesx10') where manv = '1412193';`
+
 - Bước tiếp theo : Để có thể thao tác tốt hơn với hàm giải mã . em tạo 1 SP dùng để giải mã (hàm 2 : giải mã) 
 
 #### Ví dụ từ mã nguồn:
+
+>`create procedure nhanvienLuong (key in varchar2 ,prc out sys_refcursor)`
+
+>`grant execute on nhanvienLuong to nhanvien;` (cấp quyền)
 
 ## Security 2: Xây dựng giải pháp để nhân viên và trưởng dự án xác định thông tin lương có đúng là do trưởng dự án thiết lập không. 
 - Giải pháp: Cho phép trưởng dự án sử dụng chữ ký điện tử ngay sau khi cập nhật thông tin lương để nhân viên có thể xác nhận rằng thông tin đó không bị thay đổi từ khi ký. Để làm được điều đó, ta dùng thuật toán mã hóa bất đối xứng (ở đây là RSA), trưởng dự án giữ key private để ký, mọi nhân viên xác nhận chữ ký đó đều dùng key public tương ứng. 
@@ -96,10 +120,24 @@
 
 #### Ví dụ từ mã nguồn:
 
+>`create or replace function vpd_chitieu_duan1
+(p_schema varchar2,
+p_obj varchar2)
+return varchar2`
+
 #### Tạo function xong thì kế tiếp ta add policy cho table đó 
 
 #### Ví dụ từ mã nguồn:
 
+>`BEGIN
+  SYS.DBMS_RLS.ADD_POLICY(
+  	object_schema   => 'hr',
+  	object_name     => 'CHITIEU',
+  	policy_name     => 'chitieu_vpd1s',
+  	function_schema => 'hr',
+  	policy_function => 'vpd_chitieu_duan1',
+	statement_types => 'SELECT, UPDATE');
+ END;`
 
 ## Security 4: Xây dựng giải pháp cho phép trưởng dự án mã hóa thông tin chi tiêu của dự án của mình và chỉ cho phép một số người dùng nhất định giải mã thông tin này.
 - Giải pháp: Sử dụng thuật toán mã hóa bất đối xứng (RSA), Trưởng dự án giữ key public để mã hóa thông tin chi tiêu và key private để giải mã. Nếu trưởng dự án muốn cho người nào đó xem thông tin chi tiêu thì sẽ đưa cho người đó key private để người đó giải mã.
