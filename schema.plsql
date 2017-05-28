@@ -23,6 +23,7 @@ create table NhanVien (
 	chiNhanh varchar2(50),
 	luong varchar2(128),
 	hashkey varchar2(128),
+	kyLuong varchar2(512),
 	CONSTRAINT nhanvien_pk PRIMARY KEY (manv)
 )
 /
@@ -31,7 +32,6 @@ create table  PhanCong (
 	duAN varchar2(50),
 	vaiTro varchar2(50),
 	phuCap number(10),
-	chuKy varchar2(512),
 	CONSTRAINT phancong_pk PRIMARY KEY (manv, duAN)
 )
 /
