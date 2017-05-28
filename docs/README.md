@@ -36,13 +36,13 @@
 
 #### giải pháp : Cách làm của nhóm tụi em là ta sẽ làm như sau : ta tạo 3 hàm 
 
-+ ##### Lưu ý : thầy có chỉ các gói mà oracle có sẵn để mã hóa đối xứng, nhưng nó có 1 vấn đề về hàm giải mã như sau em xin trình bày tại đây và đồng thơi nêu ra cách giải quyết của nhóm em đối với vấn đề này : dbms_crypto.decrypt (<đầu vào>, <cách băm hay cách giải>, <key muốn giải>). Nhưng ở chỗ <key muốn giải> nó chỉ hoạt động khi Key chúng ta nhập là đúng và hàm này sẽ bị crash nếu <key sai> điều này dẫn tới nó không chạy được là 1 câu select trên bảng nhân viên vì thế các giải quyết nhóm em là
++ ##### Lưu ý : thầy có chỉ các gói mà oracle có sẵn để mã hóa đối xứng, nhưng nó có 1 vấn đề về hàm giải mã như sau em xin trình bày tại đây và đồng thơi nêu ra cách giải quyết của nhóm em đối với vấn đề này : dbms_crypto.decrypt (đầu vào , cách băm hay cách giải, key muốn giải). Nhưng ở chỗ -key muốn giải- nó chỉ hoạt động khi Key chúng ta nhập là đúng và hàm này sẽ bị crash nếu -key sai- điều này dẫn tới nó không chạy được là 1 câu select trên bảng nhân viên vì thế các giải quyết nhóm em là
 
 ##### cách giải quyết vấn đề trên : chúng em thêm 1 trường để lưu key nhưng key này đã được mã hóa bằng Hash (trưởng này sẽ chứa key được băm và khi check đúng sai thì cho phép qua còn không thì ta trả về lương chưa mã hóa)
 
-+ ### Ví dụ từ mã nguồn (thêm trường Hashkey trong bảng nhân viên)
++ #### Ví dụ từ mã nguồn (thêm trường Hashkey trong bảng nhân viên)
 
-+ ### Vú dụ từ mã nguồn (kiểm tra Hashkey xem đúng hay sai và tiếp tục)
++ #### Vú dụ từ mã nguồn (kiểm tra Hashkey xem đúng hay sai và tiếp tục)
 
 ##### hàm 1 : mã hóa lương hiện tại có trong bảng thành cách dãy số nhằm che dấu với các nhân viên khác . Mã hóa theo các key mà nhân viên cung cấp cho ta mỗi nhân viên trong bảng sẽ có 1 key riêng để quản lý trưởng lương của mình trong bảng nhân viên (sử dụng dbms_crypto.encrypt : để mã hóa lương theo key của mỗi nhân viên) - có 2 thông số (lương hiện tại, key)
 
