@@ -34,7 +34,7 @@ Liệt kê các **yêu cầu nâng cao** đã thực hiện:
 
 Link demo ứng dụng:
 
-![Video Walkthrough]
+![https://youtu.be/dkI7ntLbPKQ]
 
 
 ## License
