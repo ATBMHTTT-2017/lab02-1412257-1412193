@@ -72,15 +72,17 @@
 ## Security 2: Xây dựng giải pháp để nhân viên và trưởng dự án xác định thông tin lương có đúng là do trưởng dự án thiết lập không. 
 - Giải pháp: Cho phép trưởng dự án sử dụng chữ ký điện tử ngay sau khi cập nhật thông tin lương để nhân viên có thể xác nhận rằng thông tin đó không bị thay đổi từ khi ký. Để làm được điều đó, ta dùng thuật toán mã hóa bất đối xứng (ở đây là RSA), trưởng dự án giữ key private để ký, mọi nhân viên xác nhận chữ ký đó đều dùng key public tương ứng. 
 - Cách sử dụng chữ ký điện tử: Trưởng dự án lấy thông tin lương đã có đem Hash, kết quả đó sẽ được đem đi mã hóa bằng key private của trưởng dự án, kết quả tiếp theo được gọi là chữ ký điện tử và được lưu lại kèm với thông tin lương. Nhân viên muốn xác nhận thông tin lương có đúng là trưởng dự án đã ký hay không sẽ hash thông tin lương được kết quả r1, sau đó sử dụng key public của mình giải mã chữ ký được kết quả r2. Nếu cả 2 kết quả đó giống nhau thì đã xác nhận được đúng là trưởng dự án đã ký ngay sau khi cập nhật thông tin lương, ngược lại nếu không giống nhau thì chứng tỏ đã bị thay đổi bởi một người nào đó không phải trưởng dự án.
+
 - Cách làm của nhóm: Sử dụng gói hàm mã hóa ORA_RSA của Didisoft (bản dùng thử 30 ngày). Trong bài này ta dùng 2 hàm:
-+ ORA_RSA.SIGN(): truyền vào thông tin cần ký, private key và lựa chọn thuật toán Hash, trả về chữ ký điện tử
-+ #### Ví dụ từ mã nguồn:
+1. ORA_RSA.SIGN(): truyền vào thông tin cần ký, private key và lựa chọn thuật toán Hash, trả về chữ ký điện tử
+#### Ví dụ từ mã nguồn:
 >`signature := ORA_RSA.SIGN(message => UTL_I18N.STRING_TO_RAW(p_data, 'AL32UTF8'),
         private_key => UTL_RAW.cast_to_raw(priv_key),
         private_key_password => '',
         hash => ORA_RSA.HASH_SHA256);`
-+ ORA_RSA.VERIFY(): truyền vào thông tin cần xác nhận, chữ ký, public key và thuật toán Hash tương ứng, trả về kết quả đúng/sai
-+ #### Ví dụ từ mã nguồn:
+        
+2. ORA_RSA.VERIFY(): truyền vào thông tin cần xác nhận, chữ ký, public key và thuật toán Hash tương ứng, trả về kết quả đúng/sai
+#### Ví dụ từ mã nguồn:
 >`signature_check_result := ORA_RSA.VERIFY(message => UTL_I18N.STRING_TO_RAW(p_data, 'AL32UTF8'), 
         signature => p_signature, 
         public_key => UTL_RAW.cast_to_raw(pub_key),
@@ -101,15 +103,18 @@
 
 ## Security 4: Xây dựng giải pháp cho phép trưởng dự án mã hóa thông tin chi tiêu của dự án của mình và chỉ cho phép một số người dùng nhất định giải mã thông tin này.
 - Giải pháp: Sử dụng thuật toán mã hóa bất đối xứng (RSA), Trưởng dự án giữ key public để mã hóa thông tin chi tiêu và key private để giải mã. Nếu trưởng dự án muốn cho người nào đó xem thông tin chi tiêu thì sẽ đưa cho người đó key private để người đó giải mã.
+
 - Các hàm đã sử dụng:
-+ ORA_RSA.ENCRYPT(): truyền vào thông tin cần mã hóa và key public, trả về thông tin đã mã hóa. Hàm đã sử dụng thuật toán mã hóa RSA.
-+ #### Ví dụ từ mã nguồn:
+1. ORA_RSA.ENCRYPT(): truyền vào thông tin cần mã hóa và key public, trả về thông tin đã mã hóa. Hàm đã sử dụng thuật toán mã hóa RSA.
+#### Ví dụ từ mã nguồn:
 >`encrypted_data := ORA_RSA.ENCRYPT(message => UTL_I18N.STRING_TO_RAW(p_data, 'AL32UTF8'),
   public_key => UTL_RAW.CAST_TO_RAW(p_public_key));`
-+ DBMS_CRYPTO.HASH(): truyền vào thông tin cần hash và id thuật toán Hash. Ta dùng hàm này để hash key private để nhân viên có thể kiểm tra khóa key private xem có thể giải mã được không trước khi giải mã. Như vậy thì sẽ tránh được lỗi không thể giải mã nếu key sai.
-+ #### Ví dụ từ mã nguồn:
+  
+2. DBMS_CRYPTO.HASH(): truyền vào thông tin cần hash và id thuật toán Hash. Ta dùng hàm này để hash key private để nhân viên có thể kiểm tra khóa key private xem có thể giải mã được không trước khi giải mã. Như vậy thì sẽ tránh được lỗi không thể giải mã nếu key sai.
+#### Ví dụ từ mã nguồn:
 >`return DBMS_CRYPTO.HASH(UTL_RAW.CAST_TO_RAW(p_private_key), 2);`
-+ ORA_RSA.DECRYPT(): Truyền vào thông tin đã mã hóa và private key, trả về thông tin đã giải mã
-+ #### Ví dụ từ mã nguồn:
+
+3. ORA_RSA.DECRYPT(): Truyền vào thông tin đã mã hóa và private key, trả về thông tin đã giải mã
+#### Ví dụ từ mã nguồn:
 >`decrypted_data := ORA_RSA.DECRYPT(p_data, UTL_RAW.CAST_TO_RAW(p_private_key));`
 
