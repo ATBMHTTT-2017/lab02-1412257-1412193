@@ -61,11 +61,11 @@
 
 #### Ví dụ từ mã nguồn:
 
-#### Bước tiếp theo : cập nhật trưởng Hashkey cho bảng nhân viên tương ứng với mỗi nhân viên (hàm 3 : hàm băm )
+- Bước tiếp theo : cập nhật trưởng Hashkey cho bảng nhân viên tương ứng với mỗi nhân viên (hàm 3 : hàm băm )
 
 #### Ví dụ từ mã nguồn:
 
-#### Bước tiếp theo : Để có thể thao tác tốt hơn với hàm giải mã . em tạo 1 SP dùng để giải mã (hàm 2 : giải mã) 
+- Bước tiếp theo : Để có thể thao tác tốt hơn với hàm giải mã . em tạo 1 SP dùng để giải mã (hàm 2 : giải mã) 
 
 #### Ví dụ từ mã nguồn:
 
