@@ -8,7 +8,7 @@ is
     encrypted_data raw(32000);
 BEGIN
   encrypted_data := ORA_RSA.ENCRYPT(message => UTL_I18N.STRING_TO_RAW(p_data, 'AL32UTF8'),
-                             public_key => UTL_RAW.CAST_TO_RAW(p_public_key));  
+                             public_key => UTL_RAW.CAST_TO_RAW(p_public_key));
 	return encrypted_data;
 END;
 /
