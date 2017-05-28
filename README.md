@@ -6,6 +6,8 @@ Thành viên:
 * [x] **1412193** Nguyễn Thái Học (NguyenThaiHoc1)
 * [x] **1412257** Vũ Đăng Khoa (vukhoa30)
 
+* Báo cáo : https://atbmhttt-2017.github.io/lab02-1412257-1412193/
+
 ## Yêu cầu
 
 Sinh viên check vào các mục bên dưới và ghi mã sinh viên đã làm vào chức năng theo mẫu. Mục nào ko có MSSV là tính điểm theo nhóm. Cần sắp xếp các chức năng bên dưới theo thứ tự MSSV đã thực hiện.
