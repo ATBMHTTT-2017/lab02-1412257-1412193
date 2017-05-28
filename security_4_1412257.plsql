@@ -45,4 +45,4 @@ end;
 
 grant execute on encrypt_RSA to truongduan;
 grant execute on hash_private_key to truongduan;
-grant execute on decrypt_RSA to nhanvien;
+grant execute on decrypt_RSA to nhanvien, truongduan;
