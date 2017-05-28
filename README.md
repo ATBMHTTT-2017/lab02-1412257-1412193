@@ -3,8 +3,8 @@
 **Name of your app** là một bài tập 2 tại môn ATBMHTTT. Bài tập yêu cầu sinh viên tạo cơ sở dữ liệu, mã hóa theo các yêu cầu.
 .
 Thành viên:
-* [x] **MSSV1** Nguyễn Thái Học (NguyenThaiHoc1)
-* [x] **MSSV2** Vũ Đăng Khoa (vukhoa30)
+* [x] **1412193** Nguyễn Thái Học (NguyenThaiHoc1)
+* [x] **1412257** Vũ Đăng Khoa (vukhoa30)
 
 ## Yêu cầu
 
