@@ -30,7 +30,7 @@
 
 >`create role truongduan;`
 
->`create role nhanvien;
+>`create role nhanvien;`
 
 ## Security 1: Giải pháp mã hóa thông tin lương để chỉ nhân viên được phép xem lương của mình 
 
