@@ -96,6 +96,7 @@ return RAW DETERMINISTIC`
 ## Security 2: Xây dựng giải pháp để nhân viên và trưởng dự án xác định thông tin lương có đúng là do trưởng dự án thiết lập không. 
 - Giải pháp: Cho phép trưởng dự án sử dụng chữ ký điện tử ngay sau khi cập nhật thông tin lương để nhân viên có thể xác nhận rằng thông tin đó không bị thay đổi từ khi ký. Để làm được điều đó, ta dùng thuật toán mã hóa bất đối xứng (ở đây là RSA), trưởng dự án giữ key private để ký, mọi nhân viên xác nhận chữ ký đó đều dùng key public tương ứng. 
 - Cách sử dụng chữ ký điện tử: Trưởng dự án lấy thông tin lương đã có đem Hash, kết quả đó sẽ được đem đi mã hóa bằng key private của trưởng dự án, kết quả tiếp theo được gọi là chữ ký điện tử và được lưu lại kèm với thông tin lương. Nhân viên muốn xác nhận thông tin lương có đúng là trưởng dự án đã ký hay không sẽ hash thông tin lương được kết quả r1, sau đó sử dụng key public của mình giải mã chữ ký được kết quả r2. Nếu cả 2 kết quả đó giống nhau thì đã xác nhận được đúng là trưởng dự án đã ký ngay sau khi cập nhật thông tin lương, ngược lại nếu không giống nhau thì chứng tỏ đã bị thay đổi bởi một người nào đó không phải trưởng dự án.
+- Cách sinh cặp key public và private ngẫu nhiên: http://travistidwell.com/jsencrypt/demo/
 
 - Cách làm của nhóm: Sử dụng gói hàm mã hóa ORA_RSA của Didisoft (bản dùng thử 30 ngày). Trong bài này ta dùng 2 hàm:
 1. ORA_RSA.SIGN(): truyền vào thông tin cần ký, private key và lựa chọn thuật toán Hash, trả về chữ ký điện tử
